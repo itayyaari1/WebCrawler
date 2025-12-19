@@ -6,7 +6,7 @@ import uuid
 import logging
 
 from app.models.crawl import CrawlMetadata, CrawlStatus
-from app.repository.crawl_repository import CrawlRepository
+from app.repository.crawl_repository_sqlite import CrawlRepositorySQLite as CrawlRepository
 from app.queue.crawl_queue import CrawlQueue
 from app.crawler.http_crawler import HTTPCrawler
 from app.storage.html_storage import HTMLStorage

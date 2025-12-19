@@ -1,18 +1,17 @@
 from enum import Enum
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
+from pydantic import BaseModel, Field
 
 
-class CrawlStatus(Enum):
+class CrawlStatus(str, Enum):
     ACCEPTED = "ACCEPTED"
     RUNNING = "RUNNING"
     COMPLETE = "COMPLETE"
     ERROR = "ERROR"
 
 
-@dataclass
-class CrawlMetadata:
+class CrawlMetadata(BaseModel):
     crawl_id: str
     url: str
     status: CrawlStatus
@@ -20,9 +19,5 @@ class CrawlMetadata:
     updated_at: datetime
     result_location: Optional[str] = None
     error_message: Optional[str] = None
-    notification_config: dict = None
-    
-    def __post_init__(self):
-        if self.notification_config is None:
-            self.notification_config = {}
+    notification_config: dict = Field(default_factory=dict)
 

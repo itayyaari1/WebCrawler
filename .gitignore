@@ -38,7 +38,10 @@ htmlcov/
 *.log
 
 # Crawled data (but keep the directory structure)
-data/html/*.html
+data/html/*
+!data/html/.gitkeep
+data/crawl_metadata.json
+data/crawl_metadata.db
 
 # Environment variables
 .env
