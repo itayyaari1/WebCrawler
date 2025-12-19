@@ -6,7 +6,7 @@ from datetime import datetime
 from app.models.crawl import CrawlMetadata, CrawlStatus
 
 
-class CrawlRepository:
+class CrawlDB:
     def __init__(self, storage_file: str = "data/crawl_metadata.json"):
         self._store = {}
         self._lock = threading.Lock()

@@ -6,7 +6,7 @@ import uuid
 import logging
 
 from app.models.crawl import CrawlMetadata, CrawlStatus
-from app.repository.crawl_repository_sqlite import CrawlRepositorySQLite as CrawlRepository
+from app.db.crawl_db_sqlite import CrawlDBSQLite as CrawlDB
 from app.queue.crawl_queue import CrawlQueue
 from app.crawler.http_crawler import HTTPCrawler
 from app.storage.html_storage import HTMLStorage
@@ -23,7 +23,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Initialize components (will be done in startup event)
-repository = None
+db = None
 queue = None
 worker = None
 
@@ -33,13 +33,13 @@ app = FastAPI(title="Web Crawler System")
 @app.on_event("startup")
 def startup_event():
     """Initialize all components and start worker on application startup."""
-    global repository, queue, worker
+    global db, queue, worker
     
     logger.info("Starting Web Crawler System...")
     
-    # Initialize repository
-    repository = CrawlRepository()
-    logger.info("Repository initialized")
+    # Initialize database
+    db = CrawlDB()
+    logger.info("Database initialized")
     
     # Initialize queue
     queue = CrawlQueue()
@@ -52,7 +52,7 @@ def startup_event():
     logger.info("Crawler, storage, and dispatcher initialized")
     
     # Initialize and start worker
-    worker = CrawlerWorker(queue, repository, crawler, storage, dispatcher)
+    worker = CrawlerWorker(queue, db, crawler, storage, dispatcher)
     worker.start()
     logger.info("Worker started")
     
@@ -110,7 +110,7 @@ def create_crawl(request: CrawlRequest):
     )
     
     # Store metadata
-    repository.create(crawl_metadata)
+    db.create(crawl_metadata)
     logger.info(f"Crawl created: {crawl_id}, URL: {request.url}")
     
     # Enqueue crawl job
@@ -130,7 +130,7 @@ def get_status(crawl_id: str):
     - If ERROR: include error_message
     - If not found: return NOT_FOUND
     """
-    crawl = repository.get(crawl_id)
+    crawl = db.get(crawl_id)
     
     if not crawl:
         return {

@@ -1,7 +1,7 @@
 import threading
 import logging
 from app.queue.crawl_queue import CrawlQueue
-from app.repository.crawl_repository import CrawlRepository
+from app.db.crawl_db import CrawlDB
 from app.crawler.http_crawler import HTTPCrawler
 from app.storage.html_storage import HTMLStorage
 from app.notifications.dispatcher import NotificationDispatcher
@@ -15,13 +15,13 @@ class CrawlerWorker:
     def __init__(
         self,
         queue: CrawlQueue,
-        repository: CrawlRepository,
+        db: CrawlDB,
         crawler: HTTPCrawler,
         storage: HTMLStorage,
         dispatcher: NotificationDispatcher
     ):
         self.queue = queue
-        self.repository = repository
+        self.db = db
         self.crawler = crawler
         self.storage = storage
         self.dispatcher = dispatcher
@@ -53,14 +53,14 @@ class CrawlerWorker:
                 logger.info(f"Processing crawl: {crawl_id}")
                 
                 # Get crawl metadata
-                crawl = self.repository.get(crawl_id)
+                crawl = self.db.get(crawl_id)
                 if not crawl:
-                    logger.error(f"Crawl {crawl_id} not found in repository")
+                    logger.error(f"Crawl {crawl_id} not found in database")
                     continue
                 
                 try:
                     # Update status to RUNNING
-                    self.repository.update_status(crawl_id, CrawlStatus.RUNNING)
+                    self.db.update_status(crawl_id, CrawlStatus.RUNNING)
                     logger.info(f"Crawl {crawl_id} status: RUNNING")
                     
                     # Fetch HTML
@@ -70,7 +70,7 @@ class CrawlerWorker:
                     result_location = self.storage.save(crawl_id, html)
                     
                     # Update status to COMPLETE
-                    self.repository.update_status(
+                    self.db.update_status(
                         crawl_id, 
                         CrawlStatus.COMPLETE, 
                         result_location=result_location
@@ -88,7 +88,7 @@ class CrawlerWorker:
                 except Exception as e:
                     # Update status to ERROR
                     error_message = str(e)
-                    self.repository.update_status(
+                    self.db.update_status(
                         crawl_id,
                         CrawlStatus.ERROR,
                         error_message=error_message

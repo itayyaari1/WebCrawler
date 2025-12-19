@@ -36,8 +36,9 @@ project/
 │   ├── models/
 │   │   └── crawl.py
 │   │
-│   ├── repository/
-│   │   └── crawl_repository.py
+│   ├── db/
+│   │   ├── crawl_db.py (JSON storage)
+│   │   └── crawl_db_sqlite.py (SQLite storage)
 │   │
 │   ├── queue/
 │   │   └── crawl_queue.py
@@ -59,7 +60,8 @@ project/
 │   │   └── dispatcher.py
 │
 ├── data/
-│   └── html/
+│   ├── html/
+│   └── crawl_metadata.db (SQLite database - auto-created)
 │
 ├── requirements.txt
 └── README.md
@@ -129,17 +131,18 @@ No persistence or logic yet.
 
 ---
 
-## Step 3 – Crawl Repository (Metadata Store)
+## Step 3 – Crawl Database (Metadata Store)
 
-Implement in `app/repository/crawl_repository.py`:
+Implement in `app/db/crawl_db_sqlite.py`:
 
 Responsibilities:
 - Store crawl metadata
 - Act as the source of truth
 
 Implementation details:
-- In-memory dictionary
-- Thread-safe (use a lock)
+- SQLite database (persistent storage)
+- Thread-safe (SQLite handles locking)
+- Alternative JSON implementation available in `crawl_db.py`
 
 Required methods:
 - `create(crawl_metadata)`
@@ -314,7 +317,7 @@ Important:
 ## Step 13 – Application Startup
 
 On startup:
-- Initialize repository
+- Initialize database
 - Initialize queue
 - Initialize storage and notification dispatcher
 - Start crawl worker in background thread
