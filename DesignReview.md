@@ -1,4 +1,4 @@
-# Web Crawler System – Step by Step Implementation Guide
+# Web Crawler System – Design Review
 
 ## Purpose
 
@@ -67,7 +67,7 @@ project/
 │   └── crawl_metadata.db (SQLite database - auto-created)
 │
 ├── requirements.txt
-└── README.md
+└── DesignReview.md
 ```
 
 ---
