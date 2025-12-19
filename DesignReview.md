@@ -25,6 +25,44 @@ The focus is on **system design and correctness**, not advanced crawling logic.
 
 ---
 
+## Architecture
+
+```
+Client
+  |
+  v
+API (FastAPI)
+  |
+  v
+Queue (in-memory / mock)
+  |
+  v
+Worker (single consumer)
+  |
+  +--> Storage (HTML)
+  |
+  +--> Notification Dispatcher
+```
+
+### Component Flow:
+
+1. **Client** → Sends HTTP request to crawl a URL
+2. **API (FastAPI)** → Validates request, generates crawl_id, stores metadata
+3. **Queue** → Holds crawl jobs in FIFO order (thread-safe)
+4. **Worker** → Processes jobs sequentially in background thread
+5. **Storage** → Saves HTML to disk (`data/html/{crawl_id}.html`)
+6. **Notification Dispatcher** → Sends notifications (email, Slack) when done
+
+### Key Design Principles:
+
+- **Decoupling:** API and worker are independent (queue sits between)
+- **Sequential Processing:** Worker handles one crawl at a time
+- **Persistent Metadata:** SQLite database survives restarts
+- **Async Response:** API returns immediately, crawl happens in background
+- **Status Tracking:** Clients poll `/status/{crawl_id}` endpoint
+
+---
+
 ## Project Structure
 
 ```
