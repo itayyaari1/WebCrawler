@@ -21,6 +21,5 @@ venv/
 # Crawled data (runtime files)
 data/html/*
 !data/html/.gitkeep
-data/crawl_metadata.json
 data/crawl_metadata.db
 

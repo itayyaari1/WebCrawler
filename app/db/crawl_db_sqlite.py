@@ -5,7 +5,7 @@ from datetime import datetime
 from app.models.crawl import CrawlMetadata, CrawlStatus
 
 
-class CrawlDBSQLite:
+class CrawlDB:
     def __init__(self, db_file: str = "data/crawl_metadata.db"):
         self.db_file = db_file
         self._init_db()

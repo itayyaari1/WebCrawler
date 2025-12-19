@@ -78,8 +78,7 @@ project/
 │   │   └── crawl_routes.py
 │   │
 │   ├── db/
-│   │   ├── crawl_db.py (JSON storage)
-│   │   └── crawl_db_sqlite.py (SQLite storage)
+│   │   └── crawl_db.py
 │   │
 │   ├── queue/
 │   │   └── crawl_queue.py
@@ -174,7 +173,7 @@ No persistence or logic yet.
 
 ## Step 3 – Crawl Database (Metadata Store)
 
-Implement in `app/db/crawl_db_sqlite.py`:
+Implement in `app/db/crawl_db.py`:
 
 Responsibilities:
 - Store crawl metadata
@@ -183,7 +182,6 @@ Responsibilities:
 Implementation details:
 - SQLite database (persistent storage)
 - Thread-safe (SQLite handles locking)
-- Alternative JSON implementation available in `crawl_db.py`
 
 Required methods:
 - `create(crawl_metadata)`
@@ -394,7 +392,7 @@ Log:
 This implementation:
 - Matches the assignment requirements exactly
 - Separates concerns cleanly: routes, business logic, storage, and notifications
-- Uses SQLite for persistent storage (JSON alternative available)
+- Uses SQLite for persistent storage
 - Clean architecture with dedicated routes module
 - Is easy to extend and reason about
 - Is suitable for a production design discussion

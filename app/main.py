@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import logging
 
-from app.db.crawl_db_sqlite import CrawlDBSQLite as CrawlDB
+from app.db.crawl_db import CrawlDB
 from app.queue.crawl_queue import CrawlQueue
 from app.crawler.http_crawler import HTTPCrawler
 from app.storage.html_storage import HTMLStorage
