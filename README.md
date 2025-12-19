@@ -36,6 +36,9 @@ project/
 │   ├── models/
 │   │   └── crawl.py
 │   │
+│   ├── routes/
+│   │   └── crawl_routes.py
+│   │
 │   ├── db/
 │   │   ├── crawl_db.py (JSON storage)
 │   │   └── crawl_db_sqlite.py (SQLite storage)
@@ -277,7 +280,7 @@ Concurrency:
 
 ## Step 11 – Ingestion API
 
-Implement in `app/main.py`:
+Implement in `app/routes/crawl_routes.py`:
 
 ### POST /crawl
 
@@ -296,7 +299,7 @@ Must:
 
 ## Step 12 – Status API
 
-Implement in `app/main.py`:
+Implement in `app/routes/crawl_routes.py`:
 
 ### GET /status/{crawl_id}
 
@@ -316,11 +319,14 @@ Important:
 
 ## Step 13 – Application Startup
 
+Implement in `app/main.py`:
+
 On startup:
 - Initialize database
 - Initialize queue
 - Initialize storage and notification dispatcher
 - Start crawl worker in background thread
+- Register API routes
 - Start FastAPI app
 
 ---
@@ -349,6 +355,8 @@ Log:
 
 This implementation:
 - Matches the assignment requirements exactly
-- Separates ingestion, processing, storage, status, and notifications
+- Separates concerns cleanly: routes, business logic, storage, and notifications
+- Uses SQLite for persistent storage (JSON alternative available)
+- Clean architecture with dedicated routes module
 - Is easy to extend and reason about
 - Is suitable for a production design discussion
