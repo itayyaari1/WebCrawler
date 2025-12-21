@@ -9,6 +9,7 @@ class CrawlStatus(str, Enum):
     RUNNING = "RUNNING"
     COMPLETE = "COMPLETE"
     ERROR = "ERROR"
+    NOT_FOUND = "NOT_FOUND"
 
 
 class CrawlMetadata(BaseModel):

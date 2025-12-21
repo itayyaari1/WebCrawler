@@ -85,7 +85,7 @@ def get_status(crawl_id: str):
     if not crawl:
         return {
             "crawl_id": crawl_id,
-            "status": "NOT_FOUND"
+            "status": CrawlStatus.NOT_FOUND.value
         }
     
     response = StatusResponse(
